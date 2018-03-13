@@ -1,22 +1,9 @@
-import React, { Component, createContext } from 'react'
-
-const { Provider, Consumer } = createContext(1)
-
-class TourProvider extends Component {
-  state = { current: 1 }
-  render() {
-    const { children } = this.props
-    return <Provider value={this.state}>{children}</Provider>
-  }
-}
+import React, { Component } from 'react'
+import { TourProvider, TourConsumer } from './TourContext'
 
 class Tour extends Component {
   render() {
-    return (
-      <TourProvider>
-        <Consumer>{({ current }) => <>{current}</>}</Consumer>
-      </TourProvider>
-    )
+    return 'Tour'
   }
 }
 
