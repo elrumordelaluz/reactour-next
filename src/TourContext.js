@@ -48,9 +48,9 @@ class TourStep extends Component {
   id = ''
   componentDidMount() {
     const { context, actions: { addStep } } = this.props
-    const { value } = this.ref
-    this.id = uniqueId(`${value.nodeName.toLowerCase()}-`)
-    if (value) addStep(this.id, value)
+    const { current } = this.ref
+    this.id = uniqueId(`${current.nodeName.toLowerCase()}-`)
+    if (current) addStep(this.id, current)
   }
 
   removeSelf = () => {
