@@ -1,14 +1,14 @@
 import React, { Component, createContext, createRef } from 'react'
 import PropTypes from 'prop-types'
 import uniqueId from 'lodash.uniqueid'
+import Portal from './Portal'
+import Mask from './Mask'
+import { getNodeRect } from './helpers'
 
-const { Provider, Consumer } = createContext(1)
+const { Provider, Consumer } = createContext(0)
 
 class TourProvider extends Component {
-  state = {
-    current: 1,
-    steps: [],
-  }
+  state = initialState
 
   addStep = (key, elem) => {
     this.setState(prevState => ({
@@ -30,17 +30,69 @@ class TourProvider extends Component {
     })
   }
 
+  toggleOpen = () => {
+    this.setState(
+      prevState => ({
+        isOpen: !prevState.isOpen,
+      }),
+      this.calc
+    )
+  }
+
+  calc = () => {
+    const { steps, current } = this.state
+    const currentStep = Object.keys(steps)[current]
+    const target = getNodeRect(steps[currentStep])
+    const width = Math.max(
+      document.documentElement.clientWidth,
+      window.innerWidth || 0
+    )
+    const height = Math.max(
+      document.documentElement.clientHeight,
+      window.innerHeight || 0
+    )
+    const doc = { width, height }
+
+    this.setState({ target, doc })
+  }
+
   render() {
     const { children } = this.props
-    console.log(this.state)
+    const { isOpen, target, doc } = this.state
     const actions = {
       addStep: this.addStep,
       removeStep: this.removeStep,
+      toggleOpen: this.toggleOpen,
     }
     return (
-      <Provider value={{ context: this.state, actions }}>{children}</Provider>
+      <Provider value={{ context: this.state, actions }}>
+        {children}
+        {isOpen && (
+          <Portal>
+            <Mask target={target} doc={doc} />
+          </Portal>
+        )}
+      </Provider>
     )
   }
+}
+
+const initialState = {
+  current: 0,
+  steps: [],
+  isOpen: false,
+  target: {
+    width: 0,
+    height: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+  },
+  doc: {
+    width: 0,
+    height: 0,
+  },
 }
 
 class TourStep extends Component {

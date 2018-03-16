@@ -19,9 +19,10 @@ class App extends PureComponent {
         </h1>
         {isShowing && (
           <Place>
-            {({ ref, removeSelf }) => (
-              <p ref={ref}>
+            {({ ref, removeSelf, actions }) => (
+              <p ref={ref} style={{ margin: 0, display: 'inline-block' }}>
                 loremipsum <button onClick={removeSelf}>remvoe</button>{' '}
+                <button onClick={actions.toggleOpen}>TOGGLE</button>
               </p>
             )}
           </Place>

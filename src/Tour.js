@@ -1,9 +1,12 @@
-import React, { Component } from 'react'
+import React, { Component, StrictMode } from 'react'
 import { TourProvider, TourConsumer } from './TourContext'
 
 class Tour extends Component {
   render() {
-    return 'Tour'
+    return 
+      <StrictMode>
+        Tour
+      </StrictMode>
   }
 }
 
