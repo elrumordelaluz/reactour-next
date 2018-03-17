@@ -1,6 +1,8 @@
 import React, { Component, createContext, createRef } from 'react'
 import PropTypes from 'prop-types'
 import uniqueId from 'lodash.uniqueid'
+import update from 'immutability-helper'
+
 import Portal from './Portal'
 import Mask from './Mask'
 import { getNodeRect } from './helpers'
@@ -10,10 +12,12 @@ const { Provider, Consumer } = createContext(0)
 class TourProvider extends Component {
   state = initialState
 
-  addStep = (key, elem) => {
+  addStep = (key, elem, pos = 0) => {
     this.setState(prevState => ({
-      ...prevState,
-      steps: [...prevState.steps, { key, elem }],
+      // ...prevState,
+      // steps: [...prevState.steps, { key, elem }],
+      // steps: update(prevState.steps, { $push: [{ key, elem }] }),
+      steps: update(prevState.steps, { [pos]: { $set: { key, elem } } }),
     }))
   }
 
@@ -34,21 +38,70 @@ class TourProvider extends Component {
     )
   }
 
+  openTour = () => {
+    this.setState(
+      {
+        isOpen: true,
+      },
+      this.onOpenTour
+    )
+  }
+
+  onOpenTour = () => {
+    this.calc()
+    window.addEventListener('resize', this.calc, false)
+    window.addEventListener('keydown', this.keyDownHandler, false)
+  }
+
+  closeTour = () => {
+    this.setState({
+      isOpen: false,
+    })
+  }
+
+  onCloseTour = () => {
+    window.removeEventListener('resize', this.calc)
+    window.removeEventListener('keydown', this.keyDownHandler)
+  }
+
+  keyDownHandler = e => {
+    e.stopPropagation()
+    if (e.keyCode === 27) {
+      // esc
+      e.preventDefault()
+      this.closeTour()
+    }
+    if (e.keyCode === 39) {
+      // right
+      console.log('ahjkhk')
+      e.preventDefault()
+      // this.nextStep()
+    }
+    if (e.keyCode === 37) {
+      // left
+      e.preventDefault()
+      // this.prevStep()
+    }
+  }
+
   calc = () => {
     const { steps, current } = this.state
     const currentStep = steps[current]
-    const target = getNodeRect(currentStep.elem)
-    const width = Math.max(
-      document.documentElement.clientWidth,
-      window.innerWidth || 0
-    )
-    const height = Math.max(
-      document.documentElement.clientHeight,
-      window.innerHeight || 0
-    )
-    const doc = { width, height }
 
-    this.setState({ target, doc })
+    if (currentStep) {
+      const target = getNodeRect(currentStep.elem)
+      const width = Math.max(
+        document.documentElement.clientWidth,
+        window.innerWidth || 0
+      )
+      const height = Math.max(
+        document.documentElement.clientHeight,
+        window.innerHeight || 0
+      )
+      const doc = { width, height }
+
+      this.setState({ target, doc })
+    }
   }
 
   render() {
@@ -57,9 +110,10 @@ class TourProvider extends Component {
     const actions = {
       addStep: this.addStep,
       removeStep: this.removeStep,
-      toggleOpen: this.toggleOpen,
+      openTour: this.openTour,
+      closeTour: this.closeTour,
     }
-
+    console.log(this.state)
     return (
       <Provider value={{ context: this.state, actions }}>
         {children}
@@ -95,10 +149,10 @@ class TourStep extends Component {
   ref = createRef()
   id = ''
   componentDidMount() {
-    const { context, actions: { addStep } } = this.props
+    const { context, actions: { addStep }, order } = this.props
     const { current } = this.ref
     this.id = uniqueId(`${current.nodeName.toLowerCase()}-`)
-    if (current) addStep(this.id, current)
+    if (current) addStep(this.id, current, order)
   }
 
   removeSelf = () => {
@@ -127,11 +181,11 @@ TourStep.propTypes = {
 
 class TourConsumer extends Component {
   render() {
-    const { children } = this.props
+    const { children, order } = this.props
     return (
       <Consumer>
         {({ context, actions }) => (
-          <TourStep context={context} actions={actions}>
+          <TourStep context={context} actions={actions} order={order}>
             {children}
           </TourStep>
         )}

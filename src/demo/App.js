@@ -18,16 +18,17 @@ class App extends PureComponent {
           Hello World <button onClick={this.toggle}>toggle</button>
         </h1>
         {isShowing && (
-          <Place>
+          <Place order={1}>
             {({ ref, removeSelf, actions }) => (
               <p ref={ref} style={{ margin: 0, display: 'inline-block' }}>
                 loremipsum <button onClick={removeSelf}>remvoe</button>{' '}
-                <button onClick={actions.toggleOpen}>TOGGLE</button>
+                <button onClick={actions.openTour}>open tour</button>
+                <button onClick={actions.closeTour}>close tour</button>
               </p>
             )}
           </Place>
         )}
-        <Place>{({ ref }) => <input ref={ref} />}</Place>
+        <Place order={5}>{({ ref }) => <input ref={ref} />}</Place>
       </Bus>
     )
   }

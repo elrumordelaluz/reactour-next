@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "emotion": "9.0.2",
+    "immutability-helper": "2.6.6",
     "lodash.pick": "4.4.0",
     "lodash.uniqueid": "4.0.1",
     "prop-types": "15.6.1",
