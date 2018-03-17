@@ -13,21 +13,16 @@ class TourProvider extends Component {
   addStep = (key, elem) => {
     this.setState(prevState => ({
       ...prevState,
-      steps: {
-        ...prevState.steps,
-        [key]: elem,
-      },
+      steps: [...prevState.steps, { key, elem }],
     }))
   }
 
   removeStep = key => {
-    this.setState(prevState => {
-      const { [key]: omit, ...rest } = prevState.steps
-      return {
-        ...prevState,
-        steps: rest,
-      }
-    })
+    const stepToRemove = step => step.key !== key
+    this.setState(prevState => ({
+      ...prevState,
+      steps: prevState.steps.filter(stepToRemove),
+    }))
   }
 
   toggleOpen = () => {
@@ -41,8 +36,8 @@ class TourProvider extends Component {
 
   calc = () => {
     const { steps, current } = this.state
-    const currentStep = Object.keys(steps)[current]
-    const target = getNodeRect(steps[currentStep])
+    const currentStep = steps[current]
+    const target = getNodeRect(currentStep.elem)
     const width = Math.max(
       document.documentElement.clientWidth,
       window.innerWidth || 0
@@ -64,6 +59,7 @@ class TourProvider extends Component {
       removeStep: this.removeStep,
       toggleOpen: this.toggleOpen,
     }
+
     return (
       <Provider value={{ context: this.state, actions }}>
         {children}
