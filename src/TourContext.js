@@ -19,7 +19,7 @@ class TourProvider extends Component {
         ...prevState.entities,
         [key]: elem,
       },
-      steps: [...prevState.steps, key]
+      steps: [...prevState.steps, key],
     }))
   }
 
@@ -118,13 +118,16 @@ class TourProvider extends Component {
       openTour: this.openTour,
       closeTour: this.closeTour,
     }
-    
+
     return (
       <Provider value={{ context: this.state, actions }}>
         {children}
         {isOpen && (
           <Portal>
-            <Mask target={target} doc={doc} />
+            <div onClick={this.closeTour}>
+              <Mask elem={target} doc={doc} />
+            </div>
+            <div style={{ position: 'relative', zIndex: 1000000, display: 'inline-block' }}>hjkhjk</div>
           </Portal>
         )}
       </Provider>

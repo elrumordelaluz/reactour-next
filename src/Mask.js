@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-// import styled from 'styled-components'
+import PropTypes from 'prop-types'
 import styled, { css } from 'react-emotion'
 import { safe } from './helpers'
 
@@ -12,14 +12,14 @@ const base = css`
   position: fixed;
   z-index: 99999;
 `
-const topMaskStyles = ({ target: { top }, padding = 0 }) => css`
+const topMaskStyles = ({ elem: { top }, padding = 0 }) => css`
   ${base};
   height: ${safe(top - padding)}px;
 `
 const TopMask = styled('div')(topMaskStyles)
 
 const rightMaskStyles = ({
-  target: { top, left, width, height },
+  elem: { top, left, width, height },
   doc: { width: docWidth },
   padding = 0,
 }) => css`
@@ -32,7 +32,7 @@ const rightMaskStyles = ({
 const RightMask = styled('div')(rightMaskStyles)
 
 const bottomMaskStyles = ({
-  target: { top, left, height },
+  elem: { top, left, height },
   doc: { height: docHeight },
   padding = 0,
 }) => css`
@@ -42,7 +42,7 @@ const bottomMaskStyles = ({
 `
 const BottomMask = styled('div')(bottomMaskStyles)
 
-const leftMaskStyles = ({ target: { top, left, height }, padding = 0 }) => css`
+const leftMaskStyles = ({ elem: { top, left, height }, padding }) => css`
   ${base};
   top: ${top - padding}px;
   width: ${safe(left - padding)}px;
@@ -58,5 +58,25 @@ const Mask = props => (
     <LeftMask {...props} />
   </Fragment>
 )
+
+Mask.propTypes = {
+  padding: PropTypes.number,
+  elem: PropTypes.shape({
+    top: PropTypes.number,
+    right: PropTypes.number,
+    bottom: PropTypes.number,
+    left: PropTypes.number,
+    width: PropTypes.number,
+    height: PropTypes.number,
+  }).isRequired,
+  doc: PropTypes.shape({
+    width: PropTypes.number,
+    height: PropTypes.number,
+  }).isRequired,
+}
+
+Mask.defaultProps = {
+  padding: 0,
+}
 
 export default Mask
