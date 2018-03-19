@@ -69,6 +69,24 @@ class TourProvider extends Component {
     window.removeEventListener('keydown', this.keyDownHandler)
   }
 
+  nextStep = () => {
+    this.setState(prevState => {
+      const hasNext = prevState.current + 1 < prevState.steps.length
+      return {
+        current: hasNext ? prevState.current + 1 : prevState.current,
+      }
+    }, this.calc)
+  }
+
+  prevStep = () => {
+    this.setState(prevState => {
+      const hasPrev = prevState.current - 1 >= 0
+      return {
+        current: hasPrev ? prevState.current - 1 : prevState.current,
+      }
+    }, this.calc)
+  }
+
   keyDownHandler = e => {
     e.stopPropagation()
     if (e.keyCode === 27) {
@@ -78,14 +96,13 @@ class TourProvider extends Component {
     }
     if (e.keyCode === 39) {
       // right
-      console.log('ahjkhk')
       e.preventDefault()
-      // this.nextStep()
+      this.nextStep()
     }
     if (e.keyCode === 37) {
       // left
       e.preventDefault()
-      // this.prevStep()
+      this.prevStep()
     }
   }
 
@@ -127,7 +144,15 @@ class TourProvider extends Component {
             <div onClick={this.closeTour}>
               <Mask elem={target} doc={doc} />
             </div>
-            <div style={{ position: 'relative', zIndex: 1000000, display: 'inline-block' }}>hjkhjk</div>
+            <div
+              style={{
+                position: 'relative',
+                zIndex: 1000000,
+                display: 'inline-block',
+              }}
+            >
+              hjkhjk
+            </div>
           </Portal>
         )}
       </Provider>
