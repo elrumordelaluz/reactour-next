@@ -12,21 +12,26 @@ const { Provider, Consumer } = createContext(0)
 class TourProvider extends Component {
   state = initialState
 
-  addStep = (key, elem, pos = 0) => {
+  addStep = (key, elem) => {
     this.setState(prevState => ({
-      // ...prevState,
-      // steps: [...prevState.steps, { key, elem }],
-      // steps: update(prevState.steps, { $push: [{ key, elem }] }),
-      steps: update(prevState.steps, { [pos]: { $set: { key, elem } } }),
+      ...prevState,
+      entities: {
+        ...prevState.entities,
+        [key]: elem,
+      },
+      steps: [...prevState.steps, key]
     }))
   }
 
   removeStep = key => {
-    const stepToRemove = step => step.key !== key
-    this.setState(prevState => ({
-      ...prevState,
-      steps: prevState.steps.filter(stepToRemove),
-    }))
+    this.setState(prevState => {
+      const { [key]: omit, ...restEntities } = prevState.entities
+      return {
+        ...prevState,
+        entities: restEntities,
+        steps: prevState.steps.filter(k => k !== key),
+      }
+    })
   }
 
   toggleOpen = () => {
@@ -85,11 +90,11 @@ class TourProvider extends Component {
   }
 
   calc = () => {
-    const { steps, current } = this.state
-    const currentStep = steps[current]
+    const { entities, steps, current } = this.state
+    const currentStep = entities[steps[current]]
 
     if (currentStep) {
-      const target = getNodeRect(currentStep.elem)
+      const target = getNodeRect(currentStep)
       const width = Math.max(
         document.documentElement.clientWidth,
         window.innerWidth || 0
@@ -113,7 +118,7 @@ class TourProvider extends Component {
       openTour: this.openTour,
       closeTour: this.closeTour,
     }
-    console.log(this.state)
+    
     return (
       <Provider value={{ context: this.state, actions }}>
         {children}
@@ -129,6 +134,7 @@ class TourProvider extends Component {
 
 const initialState = {
   current: 0,
+  entities: {},
   steps: [],
   isOpen: false,
   target: {
