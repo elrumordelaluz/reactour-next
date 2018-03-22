@@ -5,12 +5,14 @@ import update from 'immutability-helper'
 
 import Portal from './Portal'
 import Mask from './Mask'
+import Guide, { GuideBase } from './Guide'
 import { getNodeRect } from './helpers'
 
 const { Provider, Consumer } = createContext(0)
 
 class TourProvider extends Component {
   state = initialState
+  guideRef = createRef()
 
   addStep = (key, elem) => {
     this.setState(prevState => ({
@@ -109,9 +111,11 @@ class TourProvider extends Component {
   calc = () => {
     const { entities, steps, current } = this.state
     const currentStep = entities[steps[current]]
+    const { current: guideElem } = this.guideRef
 
     if (currentStep) {
       const target = getNodeRect(currentStep)
+      const { top, right, bottom, left, ...guide } = getNodeRect(guideElem)
       const width = Math.max(
         document.documentElement.clientWidth,
         window.innerWidth || 0
@@ -122,37 +126,32 @@ class TourProvider extends Component {
       )
       const doc = { width, height }
 
-      this.setState({ target, doc })
+      this.setState({ target, doc, guide })
     }
   }
 
   render() {
-    const { children } = this.props
-    const { isOpen, target, doc } = this.state
+    const { children, customGuide } = this.props
+    const { isOpen, target, doc, guide, current, steps } = this.state
     const actions = {
       addStep: this.addStep,
       removeStep: this.removeStep,
       openTour: this.openTour,
       closeTour: this.closeTour,
     }
-
     return (
       <Provider value={{ context: this.state, actions }}>
         {children}
         {isOpen && (
           <Portal>
-            <div onClick={this.closeTour}>
-              <Mask elem={target} doc={doc} />
-            </div>
-            <div
-              style={{
-                position: 'relative',
-                zIndex: 1000000,
-                display: 'inline-block',
-              }}
-            >
-              hjkhjk
-            </div>
+            <Mask elem={target} doc={doc} onClick={this.closeTour} />
+            <Guide elem={target} doc={doc} guide={guide} ref={this.guideRef}>
+              {customGuide ? (
+                customGuide({ current, total: steps.length })
+              ) : (
+                <GuideBase current={current} total={steps.length} />
+              )}
+            </Guide>
           </Portal>
         )}
       </Provider>
@@ -174,6 +173,10 @@ const initialState = {
     left: 0,
   },
   doc: {
+    width: 0,
+    height: 0,
+  },
+  guide: {
     width: 0,
     height: 0,
   },

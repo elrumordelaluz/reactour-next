@@ -1,3 +1,3 @@
 import Tour from './Tour'
-export { TourProvider as Bus, TourConsumer as Place } from './TourContext'
+export { TourProvider, TourConsumer } from './TourContext'
 export default Tour

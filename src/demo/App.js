@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import Tour, { Bus, Place } from '../index'
+import { TourProvider, TourConsumer } from '../index'
 
 class App extends PureComponent {
   state = {
@@ -13,12 +13,20 @@ class App extends PureComponent {
   render() {
     const { isShowing } = this.state
     return (
-      <Bus>
+      <TourProvider
+      // customGuide={({ current, total }) => {
+      //   return (
+      //     <div style={{ backgroundColor: 'white', padding: '10px' }}>
+      //       hola ({current + 1}/{total})
+      //     </div>
+      //   )
+      // }}
+      >
         <h1>
           Hello World <button onClick={this.toggle}>toggle</button>
         </h1>
         {isShowing && (
-          <Place order={1}>
+          <TourConsumer order={1}>
             {({ ref, removeSelf, actions }) => (
               <p ref={ref} style={{ margin: 0, display: 'inline-block' }}>
                 loremipsum <button onClick={removeSelf}>remvoe</button>{' '}
@@ -26,10 +34,12 @@ class App extends PureComponent {
                 <button onClick={actions.closeTour}>close tour</button>
               </p>
             )}
-          </Place>
+          </TourConsumer>
         )}
-        <Place order={5}>{({ ref }) => <input ref={ref} />}</Place>
-      </Bus>
+        <TourConsumer order={5}>
+          {({ ref }) => <input ref={ref} />}
+        </TourConsumer>
+      </TourProvider>
     )
   }
 }
