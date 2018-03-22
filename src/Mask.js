@@ -1,54 +1,77 @@
 import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
-import styled, { css } from 'react-emotion'
+import css from 'styled-jsx/css'
 import { safe } from './helpers'
 
 const base = css`
-  background-color: rgba(0, 0, 0, 0.7);
-  width: 100%;
-  left: 0;
-  top: 0;
-  height: 100%;
-  position: fixed;
-  z-index: 99999;
+  .mask {
+    background-color: rgba(0, 0, 0, 0.7);
+    width: 100%;
+    left: 0;
+    top: 0;
+    height: 100%;
+    position: fixed;
+    z-index: 99999;
+  }
 `
-const topMaskStyles = ({ elem: { top }, padding = 0 }) => css`
-  ${base};
-  height: ${safe(top - padding)}px;
-`
-const TopMask = styled('div')(topMaskStyles)
 
-const rightMaskStyles = ({
+const TopMask = ({ elem: { top }, padding }) => (
+  <div className="mask mask__top">
+    <style jsx>{base}</style>
+    <style jsx>{`
+      .mask__top {
+        height: ${safe(top - padding)}px;
+      }
+    `}</style>
+  </div>
+)
+
+const RightMask = ({
   elem: { top, left, width, height },
   doc: { width: docWidth },
-  padding = 0,
-}) => css`
-  ${base};
-  top: ${top - padding}px;
-  left: ${left + width + padding}px;
-  width: ${safe(docWidth - width - left - padding)}px;
-  height: ${height + padding * 2}px;
-`
-const RightMask = styled('div')(rightMaskStyles)
+  padding,
+}) => (
+  <div className="mask mask__right">
+    <style jsx>{base}</style>
+    <style jsx>{`
+      .mask__right {
+        top: ${top - padding}px;
+        left: ${left + width + padding}px;
+        width: ${safe(docWidth - width - left - padding)}px;
+        height: ${height + padding * 2}px;
+      }
+    `}</style>
+  </div>
+)
 
-const bottomMaskStyles = ({
+const BottomMask = ({
   elem: { top, left, height },
   doc: { height: docHeight },
-  padding = 0,
-}) => css`
-  ${base};
-  top: ${height + top + padding}px;
-  height: ${docHeight + height - top - padding}px;
-`
-const BottomMask = styled('div')(bottomMaskStyles)
+  padding,
+}) => (
+  <div className="mask mask__bottom">
+    <style jsx>{base}</style>
+    <style jsx>{`
+      .mask__bottom {
+        top: ${height + top + padding}px;
+        height: ${docHeight + height - top - padding}px;
+      }
+    `}</style>
+  </div>
+)
 
-const leftMaskStyles = ({ elem: { top, left, height }, padding }) => css`
-  ${base};
-  top: ${top - padding}px;
-  width: ${safe(left - padding)}px;
-  height: ${height + padding * 2}px;
-`
-const LeftMask = styled('div')(leftMaskStyles)
+const LeftMask = ({ elem: { top, left, height }, padding }) => (
+  <div className="mask mask__left">
+    <style jsx>{base}</style>
+    <style jsx>{`
+      .mask__left {
+        top: ${top - padding}px;
+        width: ${safe(left - padding)}px;
+        height: ${height + padding * 2}px;
+      }
+    `}</style>
+  </div>
+)
 
 const Mask = props => (
   <Fragment>
