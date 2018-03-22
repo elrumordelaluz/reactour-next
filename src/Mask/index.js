@@ -1,16 +1,19 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 
 import { TopMask, RightMask, BottomMask, LeftMask } from './Masks'
 
-const Mask = props => (
-  <Fragment>
-    <TopMask {...props} />
-    <RightMask {...props} />
-    <BottomMask {...props} />
-    <LeftMask {...props} />
-  </Fragment>
-)
+const Mask = ({ onClick, elem, doc, padding }) => {
+  const sizeProps = { elem, doc, padding }
+  return (
+    <div onClick={onClick}>
+      <TopMask {...sizeProps} />
+      <RightMask {...sizeProps} />
+      <BottomMask {...sizeProps} />
+      <LeftMask {...sizeProps} />
+    </div>
+  )
+}
 
 Mask.propTypes = {
   padding: PropTypes.number,
@@ -29,7 +32,7 @@ Mask.propTypes = {
 }
 
 Mask.defaultProps = {
-  padding: 0,
+  padding: 10,
 }
 
 export default Mask
