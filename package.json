@@ -29,8 +29,8 @@
     "lodash.pick": "4.4.0",
     "lodash.uniqueid": "4.0.1",
     "prop-types": "15.6.1",
-    "react": "16.3.0-alpha.3",
-    "react-dom": "16.3.0-alpha.3",
+    "react": "16.3.0",
+    "react-dom": "16.3.0",
     "styled-jsx": "2.2.6"
   },
   "files": [
