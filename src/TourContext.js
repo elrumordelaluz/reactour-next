@@ -14,15 +14,25 @@ class TourProvider extends Component {
   state = initialState
   guideRef = createRef()
 
-  addStep = (key, elem) => {
-    this.setState(prevState => ({
-      ...prevState,
-      entities: {
-        ...prevState.entities,
-        [key]: elem,
-      },
-      steps: [...prevState.steps, key],
-    }))
+  addStep = (key, elem, pos = 0) => {
+    this.setState(prevState => {
+      const newSteps =
+        prevState.steps.length >= pos
+          ? [...prevState.steps]
+          : [
+              ...prevState.steps,
+              ...Array.from(new Array(pos - prevState.steps.length), () => '_'),
+            ]
+
+      return {
+        ...prevState,
+        entities: {
+          ...prevState.entities,
+          [key]: elem,
+        },
+        steps: [...newSteps.slice(0, pos), key, ...newSteps.slice(pos + 1)],
+      }
+    })
   }
 
   removeStep = key => {
@@ -229,6 +239,10 @@ class TourConsumer extends Component {
       </Consumer>
     )
   }
+}
+
+TourConsumer.defaultProps = {
+  order: 0,
 }
 
 TourConsumer.propTypes = {

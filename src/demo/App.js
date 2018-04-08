@@ -26,7 +26,7 @@ class App extends PureComponent {
           Hello World <button onClick={this.toggle}>toggle</button>
         </h1>
         {isShowing && (
-          <TourConsumer order={1}>
+          <TourConsumer order={2}>
             {({ ref, removeSelf, actions }) => (
               <p ref={ref} style={{ margin: 0, display: 'inline-block' }}>
                 loremipsum <button onClick={removeSelf}>remvoe</button>{' '}
@@ -36,8 +36,11 @@ class App extends PureComponent {
             )}
           </TourConsumer>
         )}
-        <TourConsumer order={5}>
+        <TourConsumer order={1}>
           {({ ref }) => <input ref={ref} />}
+        </TourConsumer>
+        <TourConsumer order={0}>
+          {({ ref }) => <input ref={ref} defaultValue="aaa" />}
         </TourConsumer>
       </TourProvider>
     )
