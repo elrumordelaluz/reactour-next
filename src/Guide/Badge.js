@@ -1,9 +1,9 @@
 import React from 'react'
 import { badge } from './styles'
 
-const Badge = ({ text }) => (
+const Badge = ({ children }) => (
   <div className="badge">
-    {text}
+    {children}
     <style jsx>{badge}</style>
   </div>
 )

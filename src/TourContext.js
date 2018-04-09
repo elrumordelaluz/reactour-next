@@ -14,7 +14,7 @@ class TourProvider extends Component {
   state = initialState
   guideRef = createRef()
 
-  addStep = (key, elem, pos = 0) => {
+  addStep = ({ key, elem, pos = 0, content = 'aaa' }) => {
     this.setState(prevState => {
       const newSteps =
         prevState.steps.length >= pos
@@ -28,7 +28,10 @@ class TourProvider extends Component {
         ...prevState,
         entities: {
           ...prevState.entities,
-          [key]: elem,
+          [key]: {
+            elem,
+            content,
+          },
         },
         steps: [...newSteps.slice(0, pos), key, ...newSteps.slice(pos + 1)],
       }
@@ -121,6 +124,8 @@ class TourProvider extends Component {
   calc = () => {
     const { entities, steps, current } = this.state
     const currentStep = entities[steps[current]]
+      ? entities[steps[current]].elem
+      : null
     const { current: guideElem } = this.guideRef
 
     if (currentStep) {
@@ -142,13 +147,17 @@ class TourProvider extends Component {
 
   render() {
     const { children, customGuide } = this.props
-    const { isOpen, target, doc, guide, current, steps } = this.state
+    const { isOpen, target, doc, guide, current, steps, entities } = this.state
     const actions = {
       addStep: this.addStep,
       removeStep: this.removeStep,
       openTour: this.openTour,
       closeTour: this.closeTour,
     }
+    const currentContent = entities[steps[current]]
+      ? entities[steps[current]].content
+      : null
+
     return (
       <Provider value={{ context: this.state, actions }}>
         {children}
@@ -156,11 +165,9 @@ class TourProvider extends Component {
           <Portal>
             <Mask elem={target} doc={doc} onClick={this.closeTour} />
             <Guide elem={target} doc={doc} guide={guide} ref={this.guideRef}>
-              {customGuide ? (
-                customGuide({ current, total: steps.length })
-              ) : (
-                <GuideBase current={current} total={steps.length} />
-              )}
+              <Consumer>
+                {({ context, actions }) => currentContent({ context, actions })}
+              </Consumer>
             </Guide>
           </Portal>
         )}
@@ -196,10 +203,10 @@ class TourStep extends Component {
   ref = createRef()
   id = ''
   componentDidMount() {
-    const { context, actions: { addStep }, order } = this.props
+    const { context, actions: { addStep }, order: pos, content } = this.props
     const { current } = this.ref
     this.id = uniqueId(`${current.nodeName.toLowerCase()}-`)
-    if (current) addStep(this.id, current, order)
+    if (current) addStep({ key: this.id, elem: current, pos, content })
   }
 
   removeSelf = () => {
@@ -228,11 +235,15 @@ TourStep.propTypes = {
 
 class TourConsumer extends Component {
   render() {
-    const { children, order } = this.props
+    const { children, order, content } = this.props
     return (
       <Consumer>
         {({ context, actions }) => (
-          <TourStep context={context} actions={actions} order={order}>
+          <TourStep
+            context={context}
+            actions={actions}
+            order={order}
+            content={content}>
             {children}
           </TourStep>
         )}

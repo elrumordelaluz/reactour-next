@@ -112,6 +112,6 @@ Guide.defaultProps = {
 }
 
 export { default as Badge } from './Badge'
-export { default as GuideBase } from './GuideBase'
+export { default as Container } from './Container'
 
 export default Guide
