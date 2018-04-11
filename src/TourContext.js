@@ -10,6 +10,8 @@ import { getNodeRect } from './helpers'
 
 const { Provider, Consumer } = createContext(0)
 
+const EMPTY_STEP = '__'
+
 class TourProvider extends Component {
   state = initialState
   guideRef = createRef()
@@ -21,7 +23,10 @@ class TourProvider extends Component {
           ? [...prevState.steps]
           : [
               ...prevState.steps,
-              ...Array.from(new Array(pos - prevState.steps.length), () => '_'),
+              ...Array.from(
+                new Array(pos - prevState.steps.length),
+                () => EMPTY_STEP
+              ),
             ]
 
       return {
@@ -102,6 +107,16 @@ class TourProvider extends Component {
     }, this.calc)
   }
 
+  gotoStep = step => {
+    this.setState(prevState => {
+      const isValidStep =
+        prevState.steps[step] && prevState.steps[step] !== EMPTY_STEP
+      return {
+        current: isValidStep ? step : prevState.current,
+      }
+    }, this.calc)
+  }
+
   keyDownHandler = e => {
     e.stopPropagation()
     if (e.keyCode === 27) {
@@ -128,21 +143,23 @@ class TourProvider extends Component {
       : null
     const { current: guideElem } = this.guideRef
 
-    if (currentStep) {
-      const target = getNodeRect(currentStep)
-      const { top, right, bottom, left, ...guide } = getNodeRect(guideElem)
-      const width = Math.max(
-        document.documentElement.clientWidth,
-        window.innerWidth || 0
-      )
-      const height = Math.max(
-        document.documentElement.clientHeight,
-        window.innerHeight || 0
-      )
-      const doc = { width, height }
-
-      this.setState({ target, doc, guide })
+    if (!currentStep) {
+      console.log('no step')
+      return
     }
+    const target = getNodeRect(currentStep)
+    const { top, right, bottom, left, ...guide } = getNodeRect(guideElem)
+    const width = Math.max(
+      document.documentElement.clientWidth,
+      window.innerWidth || 0
+    )
+    const height = Math.max(
+      document.documentElement.clientHeight,
+      window.innerHeight || 0
+    )
+    const doc = { width, height }
+
+    this.setState({ target, doc, guide })
   }
 
   render() {
@@ -153,10 +170,12 @@ class TourProvider extends Component {
       removeStep: this.removeStep,
       openTour: this.openTour,
       closeTour: this.closeTour,
+      gotoStep: this.gotoStep,
     }
+
     const currentContent = entities[steps[current]]
       ? entities[steps[current]].content
-      : null
+      : () => {}
 
     return (
       <Provider value={{ context: this.state, actions }}>
@@ -260,4 +279,4 @@ TourConsumer.propTypes = {
   children: PropTypes.func.isRequired,
 }
 
-export { TourProvider, TourConsumer }
+export { TourProvider, TourConsumer, EMPTY_STEP }

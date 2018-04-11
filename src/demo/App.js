@@ -1,10 +1,15 @@
 import React, { PureComponent } from 'react'
-import { TourProvider, TourConsumer, Container, Badge } from '../index'
+import { TourProvider, TourConsumer, Container, Badge, Dots } from '../index'
 
 const CustomGuide = ({ context, actions, children }) => (
   <Container>
     <Badge>{context.current}</Badge>
     {children}
+    <Dots
+      steps={context.steps}
+      current={context.current}
+      gotoStep={actions.gotoStep}
+    />
   </Container>
 )
 
@@ -26,7 +31,7 @@ class App extends PureComponent {
         </h1>
         {isShowing && (
           <TourConsumer
-            order={2}
+            order={5}
             content={({ context, actions }) => (
               <Container>hola que tal ({context.current})</Container>
             )}>
@@ -41,13 +46,24 @@ class App extends PureComponent {
         )}
         <TourConsumer
           order={1}
-          content={({ context }) => (
-            <CustomGuide context={context}>ciao ciao</CustomGuide>
+          content={({ context, actions }) => (
+            <CustomGuide actions={actions} context={context}>
+              ciao ciao
+            </CustomGuide>
           )}>
           {({ ref }) => <input ref={ref} />}
         </TourConsumer>
         <TourConsumer order={0} content={() => 'aaa'}>
           {({ ref }) => <input ref={ref} defaultValue="aaa" />}
+        </TourConsumer>
+        <TourConsumer
+          order={4}
+          content={({ context, actions }) => (
+            <CustomGuide actions={actions} context={context}>
+              'aaaa_____aaaa'
+            </CustomGuide>
+          )}>
+          {({ ref }) => <input ref={ref} defaultValue="aaaa_____aaaa" />}
         </TourConsumer>
       </TourProvider>
     )
