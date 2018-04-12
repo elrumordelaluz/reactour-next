@@ -6,7 +6,6 @@ import { nav } from './styles'
 const Navigation = ({ steps, current, gotoStep }) => {
   const prevDisabled = current === 0
   const nextDisabled = current === steps.length - 1
-  console.log({ next: current - 1 })
   const prevClick = () => gotoStep(current - 1)
   const nextClick = () => gotoStep(current + 1)
   return (

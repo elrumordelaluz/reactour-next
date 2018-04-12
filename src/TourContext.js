@@ -107,12 +107,11 @@ class TourProvider extends Component {
     }, this.calc)
   }
 
-  gotoStep = step => {
+  gotoStep = nextStep => {
     this.setState(prevState => {
-      const isValidStep =
-        prevState.steps[step] && prevState.steps[step] !== EMPTY_STEP
+      const isValidStep = prevState.steps[nextStep]
       return {
-        current: isValidStep ? step : prevState.current,
+        current: isValidStep ? nextStep : prevState.current,
       }
     }, this.calc)
   }

@@ -6,7 +6,6 @@ import { EMPTY_STEP } from '../TourContext'
 const Dots = ({ steps, current, gotoStep }) => (
   <nav className="dots">
     {steps.map((step, index) => {
-      console.log({ index })
       const onClick = () => gotoStep(index)
       return (
         <button
