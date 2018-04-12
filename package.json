@@ -24,6 +24,7 @@
     "lib": "babel --out-dir dist --ignore *.test.js,src/demo src"
   },
   "dependencies": {
+    "classnames": "2.2.5",
     "immutability-helper": "2.6.6",
     "lodash.pick": "4.4.0",
     "lodash.uniqueid": "4.0.1",
