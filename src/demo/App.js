@@ -1,11 +1,17 @@
 import React, { PureComponent } from 'react'
-import { TourProvider, TourConsumer, Container, Badge, Dots } from '../index'
+import {
+  TourProvider,
+  TourConsumer,
+  Container,
+  Badge,
+  Navigation,
+} from '../index'
 
 const CustomGuide = ({ context, actions, children }) => (
   <Container>
     <Badge>{context.current}</Badge>
     {children}
-    <Dots
+    <Navigation
       steps={context.steps}
       current={context.current}
       gotoStep={actions.gotoStep}
@@ -31,7 +37,7 @@ class App extends PureComponent {
         </h1>
         {isShowing && (
           <TourConsumer
-            order={5}
+            order={2}
             content={({ context, actions }) => (
               <Container>hola que tal ({context.current})</Container>
             )}>
@@ -45,15 +51,15 @@ class App extends PureComponent {
           </TourConsumer>
         )}
         <TourConsumer
-          order={1}
+          order={0}
           content={({ context, actions }) => (
             <CustomGuide actions={actions} context={context}>
-              ciao ciao
+              Ok, let's start with the name of the Tour that is about to begin.
             </CustomGuide>
           )}>
           {({ ref }) => <input ref={ref} />}
         </TourConsumer>
-        <TourConsumer order={0} content={() => 'aaa'}>
+        <TourConsumer order={3} content={() => 'aaa'}>
           {({ ref }) => <input ref={ref} defaultValue="aaa" />}
         </TourConsumer>
         <TourConsumer

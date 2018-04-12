@@ -114,5 +114,7 @@ Guide.defaultProps = {
 export { default as Badge } from './Badge'
 export { default as Container } from './Container'
 export { default as Dots } from './Dots'
+export { default as ArrowButton } from './ArrowButton'
+export { default as Navigation } from './Navigation'
 
 export default Guide

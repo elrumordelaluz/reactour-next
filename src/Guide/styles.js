@@ -83,6 +83,46 @@ export const dots = css`
   }
 `
 
+export const arrow = css`
+  .arrow {
+    display: block;
+    cursor: pointer;
+    padding: 0;
+    outline: 0;
+    border: 0;
+    background: none;
+    font-size: 0;
+    color: #646464;
+    width: 16px;
+    height: 12px;
+    flex: 0 0 16px;
+    margin-right: 24px;
+    margin-left: auto;
+  }
+  .arrow:hover {
+    color: #000;
+  }
+  .disabled,
+  .disabled:hover {
+    color: #caccce;
+  }
+  .disabled {
+    cursor: default;
+  }
+  .inverted {
+    margin-left: 24px;
+    margin-right: auto;
+  }
+`
+
+export const nav = css`
+  .nav {
+    display: flex;
+    margin-top: 24px;
+    align-items: center;
+  }
+`
+
 export default css`
   .guide {
     position: fixed;
