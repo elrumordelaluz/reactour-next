@@ -1,11 +1,10 @@
 import React, { Component, createContext, createRef } from 'react'
 import PropTypes from 'prop-types'
 import uniqueId from 'lodash.uniqueid'
-import update from 'immutability-helper'
 
 import Portal from './Portal'
 import Mask from './Mask'
-import Guide, { GuideBase } from './Guide'
+import Guide from './Guide'
 import { getNodeRect } from './helpers'
 
 const { Provider, Consumer } = createContext(0)
@@ -162,7 +161,7 @@ class TourProvider extends Component {
   }
 
   render() {
-    const { children, customGuide } = this.props
+    const { children } = this.props
     const { isOpen, target, doc, guide, current, steps, entities } = this.state
     const actions = {
       addStep: this.addStep,
