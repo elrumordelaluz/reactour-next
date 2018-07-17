@@ -78,9 +78,12 @@ class TourProvider extends Component {
   }
 
   closeTour = () => {
-    this.setState({
-      isOpen: false,
-    })
+    this.setState(
+      {
+        isOpen: false,
+      },
+      this.onCloseTour
+    )
   }
 
   onCloseTour = () => {
