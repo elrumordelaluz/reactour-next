@@ -7,7 +7,7 @@
   "license": "MIT",
   "devDependencies": {
     "@babel/cli": "7.0.0",
-    "@babel/core": "7.0.0",
+    "@babel/core": "7.0.1",
     "@babel/preset-env": "7.0.0",
     "@babel/preset-react": "7.0.0",
     "babel-loader": "8.0.2",
@@ -29,7 +29,7 @@
     "lodash.pick": "4.4.0",
     "lodash.uniqueid": "4.0.1",
     "prop-types": "15.6.2",
-    "styled-jsx": "2.2.7",
+    "styled-jsx": "3.0.2",
     "webpack-serve": "2.0.2"
   },
   "files": [

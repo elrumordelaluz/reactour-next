@@ -46,16 +46,20 @@ module.exports.serve = {
   port,
   on: {
     listening: () => {
-      execSync('ps cax | grep "Google Chrome"')
-      execSync(
-        `osascript chrome.applescript "${encodeURI(
-          `http://localhost:${port}`
-        )}"`,
-        {
-          cwd: __dirname,
-          stdio: 'ignore',
-        }
-      )
+      try {
+        execSync('ps cax | grep "Google Chrome"')
+        execSync(
+          `osascript chrome.applescript "${encodeURI(
+            `http://localhost:${port}`
+          )}"`,
+          {
+            cwd: __dirname,
+            stdio: 'ignore',
+          }
+        )
+      } catch (err) {
+        // Ignore errors.
+      }
     },
   },
 }
