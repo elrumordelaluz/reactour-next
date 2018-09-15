@@ -223,14 +223,21 @@ class TourStep extends Component {
   ref = createRef()
   id = ''
   componentDidMount() {
-    const { context, actions: { addStep }, order: pos, content } = this.props
+    const {
+      context,
+      actions: { addStep },
+      order: pos,
+      content,
+    } = this.props
     const { current } = this.ref
     this.id = uniqueId(`${current.nodeName.toLowerCase()}-`)
     if (current) addStep({ key: this.id, elem: current, pos, content })
   }
 
   removeSelf = () => {
-    const { actions: { removeStep } } = this.props
+    const {
+      actions: { removeStep },
+    } = this.props
     removeStep(this.id)
   }
 
@@ -263,7 +270,8 @@ class TourConsumer extends Component {
             context={context}
             actions={actions}
             order={order}
-            content={content}>
+            content={content}
+          >
             {children}
           </TourStep>
         )}
@@ -272,6 +280,12 @@ class TourConsumer extends Component {
   }
 }
 
+const Context = ({ children }) => (
+  <Consumer>
+    {({ context, actions }) => children({ context, actions })}
+  </Consumer>
+)
+
 TourConsumer.defaultProps = {
   order: 0,
 }
@@ -279,5 +293,8 @@ TourConsumer.defaultProps = {
 TourConsumer.propTypes = {
   children: PropTypes.func.isRequired,
 }
+Context.propTypes = {
+  children: PropTypes.func.isRequired,
+}
 
-export { TourProvider, TourConsumer, EMPTY_STEP }
+export { TourProvider, TourConsumer, EMPTY_STEP, Context }

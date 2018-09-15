@@ -15,8 +15,11 @@
     "html-webpack-plugin": "3.2.0",
     "react": "16.5.0",
     "react-dom": "16.5.0",
+    "reshake": "1.1.5",
+    "styled-components": "4.0.0-beta.5",
     "webpack": "4.18.0",
-    "webpack-cli": "3.1.0"
+    "webpack-cli": "3.1.0",
+    "webpack-serve": "2.0.2"
   },
   "scripts": {
     "start": "webpack-serve",
@@ -29,8 +32,7 @@
     "lodash.pick": "4.4.0",
     "lodash.uniqueid": "4.0.1",
     "prop-types": "15.6.2",
-    "styled-jsx": "3.0.2",
-    "webpack-serve": "2.0.2"
+    "styled-jsx": "3.0.2"
   },
   "files": [
     "dist",
